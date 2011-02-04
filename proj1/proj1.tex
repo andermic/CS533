@@ -1,0 +1,213 @@
+\documentclass{article}
+\usepackage[pdftex]{graphicx}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\author{Michael Anderson, Tyler McClung}
+\title{Project1}
+\begin{document}
+\maketitle
+\center{CS533}
+\center{Prof. Fern}\\
+\flushleft
+\newpage
+
+\section{Part I: Playing with Blocks}
+
+\begin{enumerate}
+\item{\textbf[1.]}
+
+\begin{verbatim}
+Block World A:
+    Put(A,B):
+        Pre: {clear(B), holding(A)}
+        Add: {on(A,B), clear(A), clawEmpty}
+        Del: {clear(B), holding(A)}
+
+    Pickup(A):
+        Pre: {clear(A), onTable(A), clawEmpty}
+        Add: {holding(A)}
+        Del: {clawEmpty, onTable(A)}
+
+    Unstack(A,B):
+        Pre: {clear(A), on(A,B), clawEmpty}
+        Add: {holding(A), clear(B)}
+        Del: {on(A,B)}
+    Drop(A):
+        Pre: {holding(A)}
+        Add: {clawEmpty, onTable(A)}
+        Del: {holding(A)}
+
+Block World B:
+    Put(A,B):
+        Pre: {clear(B), holding(A)}
+        Add: {clawEmpty}
+        Del: {clear(B), holding(A)}
+
+    Insert(A,B,C):
+        Pre: {on(C,B), holding(A)}
+        Add: {on(C,A), on(A,B), clawEmpty}
+        Del: {on(C,B), holding(A)}
+
+    Pickup(A):
+        Pre: {clear(A), clawEmpty}
+        Add: {holding(A)}
+        Del: {clawEmpty}
+
+    Unstack(A,B):
+        Pre: {clear(A), on(A,B), clawEmpty}
+        Add: {holding(A), clear(B)}
+        Del: {on(A,B)}
+
+    Drop(A):
+        Pre: {holding(A)}
+        Add: {clear(A), clawEmpty}
+        Del: {holding(A)}
+\end{verbatim}
+
+The only difference between the two definitions is that Block World B
+has an insert action which allows held blocks to be directly inserted
+between two objects stacked on top of one another.
+
+Block World B's insert action will allow for shorter solutions, but
+BlackBox (our choice of planners) will have to consider possible
+insert actions in every state. This will create search trees that are
+shallower, but also broader, than Block World A's.
+
+\item[\textbf{2.}]
+Easy:
+None of the blocks are stacked on top of one another, which seems easy.
+To solve this problem, all the blocks must simply be stacked into a
+single tower in the right order from the initial position.
+
+Medium:
+There are two towers that must be merged.  In Block World A,
+both towers must be destroyed in order to construct the new
+one.  In BlockWorldB, the blocks of one tower can be placed
+directly into the other.
+
+Hard:
+In this problem, the blocks are positioned in such a way that every 
+block must be moved at least once in order to reach the goal state.
+Normally, the more steps a problem requires to solve, the harder it is
+for Blackbox to find the solution quickly.
+
+\item[\textbf{3.}]
+Block World A
+Easy: 1.33 seconds, 18 steps
+Medium: 0.7 seconds, 24 steps
+Hard: Failure. 10 minute 31 seconds, 28 steps
+
+The problem that we considered ‘Medium’ was solved faster by Blackbox.
+This happened because Blackbox had to explore fewer actions, since many
+of the potential actions did not meet their preconditions (blocks being
+in a tower limit the number of possible actions).
+
+Block World B
+Easy: Failure
+Medium: 1.71 seconds, 8 steps
+Hard: Failure
+
+It is important to note that while the solution lengths for most puzzles
+are shorter for the the second block world, the number of actions per
+iteration is much greater.  This added breadth drastically increases the
+search time for longer solutions.
+\end{enumerate}
+
+\section{Part II: Create your own planning domain}
+\begin{enumerate}
+
+\item[\textbf{1.}]
+Our traffic jam domain is based on the board game Rush Hour,
+http://eslus.com/Gizmos/rushour/rushHour.html.  The goal of the game is
+to move a goal vehicle to a specified edge of a 6 by 6 grid to
+leave a jammed parking lot. Several other obstacle vehicles block the
+path. Vehicles can only move vertically or horizontally in a straight
+line, and may take up either 2 or 3 squares on the grid.
+
+\item[\textbf{2.}]
+\begin{verbatim}
+MoveRight2H(v, s1, s2, d):
+    PRE: {VEHICLE_2H(v), at_2(v, s1, s2), empty(d), next_to_right(s2, d)}
+    ADD: {empty(s1), at_2(v, s2, d)}
+    DEL: {empty(d), at_2(v, s1, s2)}
+
+MoveLeft2H(v, s1, s2, d):
+    PRE: {VEHICLE_2H(v), at_2(v, s1, s2), empty(d), next_to_right(d, s1)
+    ADD: {empty(s2), at_2(v, d, s1)}
+    DEL: {empty(d), at_2(v, s1, s2)}
+
+MoveRight3H (v, s1, s2, s3, d):
+    PRE: {VEHICLE_3H(v),at_3(v, s1, s2, s3),  empty(d), next_to_right(s3, d)}
+    ADD: {empty(s1), at_3(v,s2, s3, d)}
+    DEL: {empty(d), at_3(v, s1, s2, s3)}
+
+MoveLeft3H(v, s1, s2, s3, d):
+    PRE: {VEHICLE_3H(v), at_3(v, s1, s2, s3), empty(d), next_to_right(d, s1)}
+    ADD: {empty(s3), at_3(v, d, s1, s2)}
+    DEL: {empty(d), at_3(v, s1, s2, s3)}
+
+MoveUp2V(v, s1, s2, d):
+    PRE: {VEHICLE_2V(v), at_2(v, s1, s2), empty(d), next_to_up(s1, d)}
+    ADD: {empty(s2), at_2(v, d, s1)}
+    DEL: {empty(d), at_2(v, s1, s2)}
+
+MoveDown2V(v, s1, s2, d):
+    PRE: {VEHICLE_2V(v), at_2(v, s1, s2), empty(d), next_to_up(d, s2)}
+    ADD: {empty(s1), at_2(v, s2, d)}
+    DEL: {empty(d), at_2(v, s1, s2)}
+
+MoveUp3V(v, s1, s2, s3, d):
+    PRE: {VEHICLE_3V(v), at_3(v, s1, s2, s3), empty(d), next_to_up(s1, d)}
+    ADD: {empty(s3), at_3(v, d, s1, s2)}
+    DEL: {empty(d), at_3(v, s1, s2, s3)}
+
+MoveDown3V(v, s1, s2, s3, d):
+    PRE: {VEHICLE_3V(v), at_3(v, s1, s2, s3), empty(d), next_to_up(d, s3)}
+    ADD: {empty(s1), at_3(v, s2, s3, d) }
+    DEL: {empty(d), at_3(v, s1, s2, s3)}
+\end{verbatim}
+
+Each action corresponds to the movement of a vehicle object in the grid.
+In order to code this domain into STRIPS, we defined up and down
+movement for vehicles placed vertically on the grid, and left and right
+actions for vehicles placed horizontally on the grid. Additionally,
+separate actions needed to be defined for vehicles that took up 2
+squares and vehicles that took up 3 squares.
+
+\item[\textbf{3.}]
+Our test problems came from the website in section 1, one of which is the following grid:
+
+1 1 - - - 2
+3 - - 4 - 2
+3 0 0 4 - 2
+3 - - 4 - -
+5 - - - 6 6
+5 - 7 7 7 -
+
+Where $vehicle_1$ is represented by the 1’s in the grid, $vehicle_2$ is
+represented by the 2’s, etc. The goal is to get $vehicle_0$ to the right
+side of the grid, where the "exit" is. In this particular initial
+position it is blocked by vehicles 4 and 2.
+
+Included with our submission is the python script proj1.py, which
+converts such a grid into the corresponding set of PDDL propositions
+that can be used as the facts file for BlackCox.
+
+\item[\textbf{4.}]
+After running the planner on four sample problems of varying
+difficulties (from easy to the most challenging), it was clear that
+Blackbox performs well in this domain only for shallow, narrow search
+spaces. Since Blackbox is essentially an iterative deepening descent
+search, it must iterate the entire search tree of depth n, where n is
+the number of steps of the optimal solution.  Deep, wide trees grow
+exponentially per iteration, causing Blackbox to fail for problems with
+significant large search spaces.
+
+The solutions that Blackbox provides are quite useful. Every action in a
+layer must be executed before actions in the next layer, but are not
+mutex with actions in the same layer. To solve a puzzle, the actions in
+the solution can be executed top-to-bottom to reach the goal state. 
+All of the solutions are optimal in the number of actions given.
+
+\end{enumerate}
+\end{document}
