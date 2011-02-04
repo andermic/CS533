@@ -70,7 +70,7 @@ def get_init(filename):
 
     goal = []
     goal.append('(:goal (and')
-    goal.append('   (at v0 sq_%d_%d sq_%d_%d)' % (v_to_sq['0'][0][0],
+    goal.append('   (at_2 v0 sq_%d_%d sq_%d_%d)' % (v_to_sq['0'][0][0],
      grid_size[1]-2, v_to_sq['0'][0][0], grid_size[1]-1))
     goal.append('))')
 
@@ -78,6 +78,9 @@ def get_init(filename):
     for i in [squares, vehicle2h, vehicle2v, vehicle3h, vehicle3v, next_to_up,
      next_to_right, at, empty]:
         i.sort()
+
+    print '(define (problem trafficProblem)'
+    print '(:domain trafficJam)'
 
     print '(:objects'
     for s in squares:
@@ -127,5 +130,6 @@ def get_init(filename):
 
     for g in goal:
         print g
+    print ')'
 
 get_init(argv[1])

@@ -1,3 +1,5 @@
+(define (problem trafficProblem)
+(:domain trafficJam)
 (:objects
    sq_0_0
    sq_0_1
@@ -195,5 +197,6 @@
 )
 
 (:goal (and
-   (at v0 sq_2_4 sq_2_5)
+   (at_2 v0 sq_2_4 sq_2_5)
 ))
+)

@@ -67,7 +67,7 @@
      :parameters (?v ?s1 ?s2 ?s3 ?d)
      :precondition (and (VEHICLE_3V ?v) (at_3 ?v ?s1 ?s2 ?s3) (empty ?d)
       (next_to_up ?d ?s3))
-     :effect (and (empty ?s3) (at_3 ?v ?s2 ?s3 ?d)
+     :effect (and (empty ?s1) (at_3 ?v ?s2 ?s3 ?d)
       (not (empty ?d)) (not (at_3 ?v ?s1 ?s2 ?s3))))
 )
 
