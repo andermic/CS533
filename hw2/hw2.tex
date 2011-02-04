@@ -1,0 +1,117 @@
+\documentclass{article}
+\usepackage[pdftex]{graphicx}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\author{Michael Anderson}
+\title{Homework Set 2}
+\begin{document}
+\maketitle
+\center{CS533}
+\center{Prof. Fern}\\
+\flushleft
+\newpage
+
+\begin{enumerate}
+\item[\textbf{1.}]
+
+\begin{enumerate}
+\item[a)]
+Yes, because if the goal is reachable in some time $T$ where 
+$0 \le T \le T_{max}$, then $g^T$ and consequently 
+$g^0 \vee ... \vee g^T \vee ... \vee g^{T_{max}}$ will be satisfiable
+and the SATPLAN algorithm will return some plan.
+
+\item[b)]
+Yes. Suppose some goal is reachable at some time $t$ where $t \le T_{max}$.
+Then all of the potential actions taken after $t$ will be arbitrary and all of
+their possible combinations could be enumerated as solutions by the SAT solver.
+All of these combinations are irrelevant, because the only important
+information would be the set of actions occuring up to $t$ to reach the goal.
+
+\item[c)]
+Follow the approach of SATPLAN, and break apart the disjuctive goal into
+subgoals that are tackled as individual SAT problems within a loop. Iterate
+through each subgoal, until a satisficing assignment is found.
+
+\end{enumerate}
+
+\item[\textbf{2.}]
+Any situation where three interchangeable actions can reach a goal, and two
+non-interchangeable actions can reach the same goal, is sufficient. Suppose a
+person wants to move three files from their computer to some other computer on
+the internet. Their OS shell allows them to take the following actions:
+
+Move(x). Moves the file or directory x from the starting computer to the goal
+computer.
+
+MoveAllFolder(x). Moves all three of the files to some directory x.
+
+Now there are basically two ways to reach the goal. First, the Move() action
+can be executed three times, once for each individual file. This is a single
+layer of a layered plan, if the natural assumption is made that moving one
+file does affect the ability to move the other two.
+
+Second, MoveAllFolder(f) can move all of the files into a single folder f,
+which can then be moved using Move(f). This is a two layer plan, because the
+ability to reach the goal using Move(f) is contingent upon the first action.
+Order matters here.
+
+The first plan is layer-optimal, while the second plan is action-optimal.
+
+\item[\textbf{3.}]
+\begin{enumerate}
+\item[F-F1]
+Here at(r1,l2,0) can be a true fluent, so that no move is required to get
+to produce at(r1,l2,1). This is not legal because this is inconsistent
+with the initial state and violates condition (a).
+\item[F-F2]
+Here at(r1,l1,1) can be a true fluent, so that no move is made from the initial
+state of \{at(r1,l1,0) $\vee \neg$at(r1,l2,0)\}. This is not legal because this
+is inconsistent with the goal state and violates condition (b).
+\item[F-F3]
+Here move(r1,l1,l2,0) and move(r1,l2,l1,0) can both be true, along with the
+initial and goal fluents. This is not legal because if both of these actions
+are taken in the given order, the robot will move back to where it started
+instead of moving to l2, which is presupposed by setting the goal fluent to
+true. Therefore, condition (c) is violated.
+\item[F-F4]
+Here all of the move fluents can be false, while the initial and goal fluents
+are true. This is not legal, because the robot simply jumps from the initial
+state to the goal state without taking an action, violating condition (c).
+\end{enumerate}
+
+\item[\textbf{4.}]
+The distance to an optimal relaxed solution is an admissible heuristic for the
+distance to an optimal (or non-optimal) non-relaxed plan, because a relaxed
+problem has constraints that are a subset of the constraints of a non-relaxed
+problem. Since there could be less constraints to satisfy in a relaxed problem,
+its optimal solution could only be shorter (and never longer) than a solution
+to the corresponding non-relaxed problem.
+
+A heuristic is admissible if it never overestimates the distance to a goal,
+so the distance to the optimal relaxed solution is an admissible heuristic for
+the distance to any non-relaxed solution.
+
+\item[\textbf{5.}]
+(a). As an example, the set of actions will include something like the
+following:
+
+MoveNorth(1,1):\\
+PRE: at(1,1)\\
+ADD: at(2,1)\\
+DEL: at(1,1)
+
+In other words, each legal move will alter the state of the robot by adding its
+new location fluent to the state, and removing the old one. In the relaxed
+problem, previous locations will not be removed as it
+traverses the grid, and it will "occupy" its current location as well as all of
+its previous locations simultaneously. This is ok, because if the robot follows
+the heuristic its distance to the goal will decrease with each action.
+Since an action will never take it further from the goal, its previous squares
+will never be closer to the goal than its current square, and its simultaneous
+occupation of all of those squares will be irrelevant. I.e., the distance to
+the goal in the relaxed problem will always be equal to the distance to the
+goal in the non-relaxed problem.
+
+\end{enumerate}
+\end{document}

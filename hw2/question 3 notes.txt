@@ -1,0 +1,23 @@
+Initial
+at(r1,l1,0) * ~at(r1,l2,0)
+
+Goal
+at(r1,l2,1)
+
+Action/Effect
+move(r1,l1,l2,0) -> at(r1,l1,0)
+move(r1,l1,l2,0) -> at(r1,l2,1)
+move(r1,l1,l2,0) -> at(r1,l1,1)
+move(r1,l2,l1,0) -> at(r1,l2,0)
+move(r1,l2,l1,0) -> at(r1,l1,1)
+move(r1,l2,l1,0) * ~at(r1,l2,1)
+
+Complete-Exclusion
+~move(r1,l1,l2,0) * ~move(r1,l2,l1,0)
+
+Explanatory Frame
+~at(r1,l1,0) * at(r1,l1,1) -> move(r1,l2,l1,0)
+~at(r1,l2,0) * at(r1,l2,1) -> move(r1,l1,l2,0)
+at(r1,l1,0) * ~at(r1,l1,1) -> move(r1,l1,l2,0)
+at(r1,l2,0) * ~at(r1,l2,1) -> move(r1,l2,l1,0)
+
