@@ -2,6 +2,10 @@
 
 from itertools import product
 
+# Convert a tuple of numbers to the name of a square
+def make_sq(tuple):
+    return 'sq_%d_%d' % (tuple[0], tuple[1])
+
 # Get the initial state of a gridlock problem from a file
 def get_init(filename):
 
@@ -13,13 +17,14 @@ def get_init(filename):
     squares = ['sq_%d_%d' % (r,c) for r,c in product(range(grid_size[0]), range(grid_size[1]))]
 
     # Define which squares are next to each other
-    next_to = []
+    next_to_right = []
+    next_to_up = []
     for i in range(grid_size[0]):
         for j in range(grid_size[1] - 1):
-            next_to.append('next_to sq_%d_%d sq_%d_%d' % (i,j,i,j+1))
+            next_to_right.append('next_to_right sq_%d_%d sq_%d_%d' % (i,j,i,j+1))
     for i in range(grid_size[0] - 1):
         for j in range(grid_size[1]):
-            next_to.append('next_to sq_%d_%d sq_%d_%d' % (i,j,i+1,j))
+            next_to_up.append('next_to_up sq_%d_%d sq_%d_%d' % (i+1,j,i,j))
 
     # Figure out and represent the location of the goal vehicle, the obstacle
     #  vehicles, and empty squares. The 0's in the grid are the goal vehicle,
@@ -31,36 +36,62 @@ def get_init(filename):
             if grid[i][j] == '\n':
                 continue
             if v_to_sq.get(grid[i][j]) == None:
-                v_to_sq[grid[i][j]] = ['sq_%d_%d' % (i,j)]
+                v_to_sq[grid[i][j]] = [(i,j)]
             else:
-                v_to_sq[grid[i][j]].append('sq_%d_%d' % (i,j))
+                v_to_sq[grid[i][j]].append((i,j))
 
-    vehicles = []
+    vehicle2h = []
+    vehicle2v = []
+    vehicle3h = []
+    vehicle3v = []
     at = []
     empty = []
     for key in v_to_sq.keys():
-        if key == '0':
-            vehicles.append('v_goal')
-            at.append('at v_goal %s' % ' '.join(v_to_sq[key]))
         if key == '-':
             for empty_square in v_to_sq[key]:
-                empty.append('empty %s' % empty_square)
+                empty.append('empty %s' % make_sq(empty_square))
         else:
-            vehicles.append('v%s' % key)
-            at.append('at v%s %s' % (key, ' '.join(v_to_sq[key])))
+            v = v_to_sq[key]
+            if len(v) == 2:
+                if v[0][0] == v[1][0]:
+                    vehicle2h.append('v%s' % key)
+                else:
+                    vehicle2v.append('v%s' % key)
+            elif len(v) == 3:
+                if v[0][0] == v[1][0]:
+                    vehicle3h.append('v%s' % key)
+                else:
+                    vehicle3v.append('v%s' % key)
+            if len(v_to_sq[key]) == 2:
+                at.append('at_2 v%s %s' % (key, ' '.join([make_sq(i) for i in v_to_sq[key]])))
+            elif len(v_to_sq[key]) == 3:
+                at.append('at_3 v%s %s' % (key, ' '.join([make_sq(i) for i in v_to_sq[key]])))
+
+    goal = []
+    goal.append('(:goal (and')
+    goal.append('   (at v0 sq_%d_%d sq_%d_%d)' % (v_to_sq['0'][0][0],
+     grid_size[1]-2, v_to_sq['0'][0][0], grid_size[1]-1))
+    goal.append('))')
 
     # Output information
-    squares.sort()
-    vehicles.sort()
-    next_to.sort()
-    at.sort()
-    empty.sort()
+    for i in [squares, vehicle2h, vehicle2v, vehicle3h, vehicle3v, next_to_up,
+     next_to_right, at, empty]:
+        i.sort()
 
     print '(:objects'
     for s in squares:
         print '   ' + s
     print
-    for v in vehicles:
+    for v in vehicle2h:
+        print '   ' + v
+    print
+    for v in vehicle2v:
+        print '   ' + v
+    print
+    for v in vehicle3h:
+        print '   ' + v
+    print
+    for v in vehicle3v:
         print '   ' + v
     print ')\n'
 
@@ -68,10 +99,22 @@ def get_init(filename):
     for s in squares:
         print '   (SQUARE %s)' % s
     print
-    for v in vehicles:
-        print '   (VEHICLE %s)' % s
+    for v in vehicle2h:
+        print '   (VEHICLE_2H %s)' % v
     print
-    for n in next_to:
+    for v in vehicle2v:
+        print '   (VEHICLE_2V %s)' % v
+    print
+    for v in vehicle3h:
+        print '   (VEHICLE_3H %s)' % v
+    print
+    for v in vehicle3v:
+        print '   (VEHICLE_3V %s)' % v
+    print
+    for n in next_to_right:
+        print '   (%s)' % n
+    print
+    for n in next_to_up:
         print '   (%s)' % n
     print
     for a in at:
@@ -79,7 +122,10 @@ def get_init(filename):
     print
     for e in empty: 
         print '   (%s)' % e
-    print ')'
+    print ')\n'
+
+    for g in goal:
+        print g
 
 FILENAME = 'problem1.txt'
 get_init(FILENAME)
