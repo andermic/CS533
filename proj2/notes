@@ -1,0 +1,19 @@
+Make a normal and impatient parker. For each, assign reward values to the following:
+	-Handicap spaces A[1] and B[1]
+	-Collisions
+	-Tiered function for parking spots 2-10
+	-The cost of driving
+
+An agent class
+	-Major function takes a state, returns an action according to given policy
+	-Two agents that inherit agent class, normal and impatient
+	-Data member that holds the current policy
+
+A simulator class that accepts actions and moves to the following state
+	-Should set up the simulation
+	-Should end the simulation once a terminal state is reached
+
+Some main controller loop that instantiates the simulation ~1000 times.
+	-Update policy within the agent classes
+	-Log the policy into a file once the simuilations are complete
+
