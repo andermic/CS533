@@ -47,20 +47,30 @@ class Player:
 		return 0
 
 	def next_action(self, s):
+		for a in ("DRIVE", "PARK", "EXIT"):
+			if a == "DRIVE":
+			#WE ARE HERE!
+			q[s[0][0], s[0][1], s[1], s[2], a] += 0.5 * (self.find_reward(s) + q[
 		return 0
 
 class Impatient_Player(Player):
 	def find_reward(self, s):
-		return 0
-	
-	def next_action(self, s):
-		self.reward -= 5
-		return 0
+		if not s[2]:
+			return -2
+		if s[1]:
+			return -1000
+		reward = 110 - 10*s[0][1]
+		if s[0][1] == 1:
+			reward -= 100
+		return reward
 
 class Normal_Player(Player):
 	def find_reward(self, s):
-		return 0
-	
-	def next_action(self, s):
-		self.reward -= 1
-		return 0
+		if not s[2]:
+			return -1
+		if s[1]:
+			return -2000
+		reward = 110 - 5*s[0][1]
+		if s[0][1] == 1:
+			reward -= 200
+		return reward
