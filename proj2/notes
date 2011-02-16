@@ -15,5 +15,4 @@ A simulator class that accepts actions and moves to the following state
 
 Some main controller loop that instantiates the simulation ~1000 times.
 	-Update policy within the agent classes
-	-Log the policy into a file once the simuilations are complete
-
+	-Log the policy into a file once the simulations are complete
