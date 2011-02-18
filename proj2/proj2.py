@@ -197,7 +197,7 @@ print '4 - Simple/Impatient'
 print '5 - RL/Normal'
 print '6 - RL/Impatient'
 choice = input(':')
-p = {1:Normal_Player(), 2:Impatient_Player(), 3:Random_Player(), 4:Drive_Player(), 5:Simple_Normal(), 6:Simple_Impatient()}[choice]
+p = {1:Random_Player(), 2:Drive_Player(), 3:Simple_Normal(), 4:Simple_Impatient(), 5:Normal_Player(), 6:Impatient_Player()}[choice]
 print
 
 ITERATIONS = 1000
