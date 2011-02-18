@@ -187,6 +187,44 @@ class Simple_Impatient(Player):
 		if s[0][1] == 1:
 			reward -= 100
 		return reward
+
+class Simple_Random_Player(Player):
+	def next_action(self, s):
+		if s[2]:
+			return "EXIT"
+		if s[0][1] == 1:
+			return "DRIVE"
+		return {1 : "DRIVE", 2 : "PARK"}[randint(1,2)]
+	
+	def find_reward(self, s):
+		if not s[2]:
+			return -1
+		if s[1]:
+			return -1000
+		reward = 110 - 5*s[0][1]
+		if s[0][1] == 1:
+			reward -= 200
+		return reward
+
+class Simple_Drive_Player(Player):
+	def next_action(self, s):
+		if s[2]:
+			return "EXIT"
+		if s[1]:
+			return "DRIVE"
+		if s[0][1] > 1 and s[0][1] < 6:
+			return "PARK"
+		return {1 : "DRIVE", 2 : "PARK"}[randint(1,2)]
+	
+	def find_reward(self, s):
+		if not s[2]:
+			return -1
+		if s[1]:
+			return -1000
+		reward = 110 - 5*s[0][1]
+		if s[0][1] == 1:
+			reward -= 200
+		return reward
 	
 system('CLS')
 print 'Pick a player:'
@@ -196,8 +234,12 @@ print '3 - Simple/Normal'
 print '4 - Simple/Impatient'
 print '5 - RL/Normal'
 print '6 - RL/Impatient'
+print '7 - Improved_Random/Normal'
+print '8 - Improved_Drive/Normal'
+
+
 choice = input(':')
-p = {1:Normal_Player(), 2:Impatient_Player(), 3:Random_Player(), 4:Drive_Player(), 5:Simple_Normal(), 6:Simple_Impatient()}[choice]
+p = {1:Normal_Player(), 2:Impatient_Player(), 3:Random_Player(), 4:Drive_Player(), 5:Simple_Normal(), 6:Simple_Impatient(), 7:Simple_Random_Player(), 8:Simple_Drive_Player()}[choice]
 print
 
 ITERATIONS = 1000
