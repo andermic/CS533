@@ -1,3 +1,4 @@
+from os import system
 from random import randint
 import math
 
@@ -65,7 +66,6 @@ class Game:
 class Player:
 	STAGNANT_STATE_REWARD = -1;
 	reward = 0
-	ALPHA = 0.5
 	BETA = 1
 	EPSILON = 1
 	policy = {}
@@ -100,18 +100,6 @@ class Player:
 			1/float(self.q[str((s_prev[0][0], s_prev[0][1], s_prev[1], s_prev[2], action))][1]) * \
 			(self.find_reward(s_prev) + self.BETA * maxQ - self.q[str((s_prev[0][0], s_prev[0][1], s_prev[1], s_prev[2], action))][0])
 
-class Impatient_Player(Player):
-	STAGNANT_STATE_REWARD = -2
-	def find_reward(self, s):
-		if not s[2]:
-			return self.STAGNANT_STATE_REWARD
-		if s[1]:
-			return -1000
-		reward = 110 - 10*s[0][1]
-		if s[0][1] == 1:
-			reward -= 100
-		return reward
-
 class Normal_Player(Player):
 	STAGNANT_STATE_REWARD = -1
 	def find_reward(self, s):
@@ -122,6 +110,18 @@ class Normal_Player(Player):
 		reward = 110 - 5*s[0][1]
 		if s[0][1] == 1:
 			reward -= 200
+		return reward
+
+class Impatient_Player(Player):
+	STAGNANT_STATE_REWARD = -2
+	def find_reward(self, s):
+		if not s[2]:
+			return self.STAGNANT_STATE_REWARD
+		if s[1]:
+			return -1000
+		reward = 110 - 10*s[0][1]
+		if s[0][1] == 1:
+			reward -= 100
 		return reward
 
 class Random_Player(Player):
@@ -157,9 +157,50 @@ class Drive_Player(Player):
 		if s[0][1] == 1:
 			reward -= 200
 		return reward
-		
-ITERATIONS = 10000
-p = Impatient_Player()
+
+class Simple_Normal(Player):
+    def next_action(self,s):
+        pass
+
+	STAGNANT_STATE_REWARD = -1
+	def find_reward(self, s):
+		if not s[2]:
+			return self.STAGNANT_STATE_REWARD
+		if s[1]:
+			return -1000
+		reward = 110 - 5*s[0][1]
+		if s[0][1] == 1:
+			reward -= 200
+		return reward
+
+class Simple_Impatient(Player):
+    def next_action(self,s):
+        pass
+
+	STAGNANT_STATE_REWARD = -2
+	def find_reward(self, s):
+		if not s[2]:
+			return self.STAGNANT_STATE_REWARD
+		if s[1]:
+			return -1000
+		reward = 110 - 10*s[0][1]
+		if s[0][1] == 1:
+			reward -= 100
+		return reward
+	
+system('CLS')
+print 'Pick a player:'
+print '1 - Random/Normal'
+print '2 - Drive/Normal'
+print '3 - Simple/Normal'
+print '4 - Simple/Impatient'
+print '5 - RL/Normal'
+print '6 - RL/Impatient'
+choice = input(':')
+p = {1:Normal_Player(), 2:Impatient_Player(), 3:Random_Player(), 4:Drive_Player(), 5:Simple_Normal(), 6:Simple_Impatient()}[choice]
+print
+
+ITERATIONS = 1000
 moves = 0
 for i in range(5 * ITERATIONS):
 	moves += Game(p).moves
@@ -167,7 +208,9 @@ reward = 0
 for i in range(ITERATIONS):
 	reward += Game(p).reward
 print "Average reward: " + str(float(reward) / ITERATIONS)
-stream = open("result.txt", 'w')
+
+stream = open("result%d.txt" % choice, 'w')
+stream.write("Average reward: " + str(float(reward) / ITERATIONS))
 stream.write('Average moves: %f\n' % (float(moves) / (5 * ITERATIONS)))
 stream.write('Average score (after training): %f\n' % (float(reward) / ITERATIONS))
 for sa in product(('A', 'B'), range(1,11), ("DRIVE", "PARK", "EXIT")):
