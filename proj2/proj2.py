@@ -158,14 +158,17 @@ class Drive_Player(Player):
 			reward -= 200
 		return reward
 
-class Simple_Normal(Player):
-    def next_action(self,s):
-        pass
-
-	STAGNANT_STATE_REWARD = -1
+class Simple_Random_Player(Player):
+	def next_action(self, s):
+		if s[2]:
+			return "EXIT"
+		if s[0][1] == 1:
+			return "DRIVE"
+		return {1 : "DRIVE", 2 : "PARK"}[randint(1,2)]
+	
 	def find_reward(self, s):
 		if not s[2]:
-			return self.STAGNANT_STATE_REWARD
+			return -1
 		if s[1]:
 			return -1000
 		reward = 110 - 5*s[0][1]
@@ -173,32 +176,38 @@ class Simple_Normal(Player):
 			reward -= 200
 		return reward
 
-class Simple_Impatient(Player):
-    def next_action(self,s):
-        pass
-
-	STAGNANT_STATE_REWARD = -2
+class Simple_Drive_Player(Player):
+	def next_action(self, s):
+		if s[2]:
+			return "EXIT"
+		if s[1]:
+			return "DRIVE"
+		if s[0][1] > 1 and s[0][1] < 6:
+			return "PARK"
+		return {1 : "DRIVE", 2 : "PARK"}[randint(1,2)]
+	
 	def find_reward(self, s):
 		if not s[2]:
-			return self.STAGNANT_STATE_REWARD
+			return -1
 		if s[1]:
 			return -1000
-		reward = 110 - 10*s[0][1]
+		reward = 110 - 5*s[0][1]
 		if s[0][1] == 1:
-			reward -= 100
+			reward -= 200
 		return reward
 	
 system('CLS')
 print 'Pick a player:'
 print '1 - Random/Normal'
 print '2 - Drive/Normal'
-print '3 - Simple/Normal'
-print '4 - Simple/Impatient'
+print '3 - Simple Random'
+print '4 - Simple Drive'
 print '5 - RL/Normal'
 print '6 - RL/Impatient'
+
+
 choice = input(':')
-p = {1:Random_Player(), 2:Drive_Player(), 3:Simple_Normal(), 4:Simple_Impatient(), 5:Normal_Player(), 6:Impatient_Player()}[choice]
-print
+p = {1:Random_Player(), 2:Drive_Player(), 3:Simple_Random_Player(), 4:Simple_Drive_Player(), 5:Normal_Player(), 6:Impatient_Player()}[choice]
 
 ITERATIONS = 1000
 moves = 0
