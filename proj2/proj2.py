@@ -33,7 +33,6 @@ class Game:
 		while self.moves < 200:
 			print str(self.moves) + '\t',
 			a = p.next_action(old_state)
-			self.occupied = randint(0, 100) < 110 - 10 * self.location[1]
 			if self.location[1] == 1:
 				self.occupied = randint(0,100) < 10
 			if a == "EXIT":
@@ -52,6 +51,7 @@ class Game:
 					self.location = (self.location[0], self.location[1] - 1)
 					if self.location[1] < 1:
 						self.location = ('B', 10)
+				self.occupied = randint(0, 100) < 110 - 10 * self.location[1]
 			self.moves += 1
 			new_state = (self.location, self.occupied, self.parked)
 			p.update_q(old_state, a, (self.location, self.occupied, self.parked))
@@ -116,13 +116,13 @@ class Normal_Player(Player):
 			reward -= 200
 		return reward
 
-ITERATIONS = 100000
-p = Impatient_Player()
+ITERATIONS = 10000
+p = Normal_Player()
 moves = 0
 for i in range(ITERATIONS):
 	moves += Game(p).moves
 	print
-stream = open("result.txt", 'w')
+stream = open("result_normal.txt", 'w')
 stream.write('Average moves: %f\n' % (float(moves) / ITERATIONS))
 for sa in product(('A', 'B'), range(1,11), ("DRIVE", "PARK", "EXIT")):
 	stream.write('%s\t%f\n' % (str(sa), p.q[str((sa[0], sa[1], False, False, sa[2]))][0]))
