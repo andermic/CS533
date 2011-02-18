@@ -17,6 +17,7 @@ class Game:
 	location = []
 	parked = False
 	occupied = 0
+	reward = 0
 
 	def __init__(self, p):
 		#Randomly generate initial state
@@ -31,17 +32,22 @@ class Game:
 		
 		#Play game here
 		while self.moves < 200:
-			print str(self.moves) + '\t',
 			a = p.next_action(old_state)
+			self.moves += 1
 			if self.location[1] == 1:
 				self.occupied = randint(0,100) < 10
 			if a == "EXIT":
 				if self.parked:
-					self.moves += 1
-					p.update_q(old_state, a, (self.location, self.occupied, self.parked))
+					p.update_q(old_state, a, old_state)
 					break
+				else:
+					self.reward += p.STAGNANT_STATE_REWARD
 			elif a == "PARK":
-				self.parked = True
+				if (self.parked):
+					self.reward += p.STAGNANT_STATE_REWARD
+				else: 
+					self.parked = True
+					self.reward += p.find_reward((self.location, self.occupied, self.parked))
 			elif a == "DRIVE":
 				if self.location[0] == 'B':
 					self.location = (self.location[0], self.location[1] + 1)
@@ -52,12 +58,12 @@ class Game:
 					if self.location[1] < 1:
 						self.location = ('B', 10)
 				self.occupied = randint(0, 100) < 110 - 10 * self.location[1]
-			self.moves += 1
-			new_state = (self.location, self.occupied, self.parked)
+				self.reward += p.find_reward((self.location, self.occupied, self.parked))
 			p.update_q(old_state, a, (self.location, self.occupied, self.parked))
-			old_state = new_state
+			old_state = (self.location, self.occupied, self.parked)
 
 class Player:
+	STAGNANT_STATE_REWARD = -1;
 	reward = 0
 	ALPHA = 0.5
 	BETA = 1
@@ -95,9 +101,10 @@ class Player:
 			(self.find_reward(s_prev) + self.BETA * maxQ - self.q[str((s_prev[0][0], s_prev[0][1], s_prev[1], s_prev[2], action))][0])
 
 class Impatient_Player(Player):
+	STAGNANT_STATE_REWARD = -2
 	def find_reward(self, s):
 		if not s[2]:
-			return -2
+			return self.STAGNANT_STATE_REWARD
 		if s[1]:
 			return -1000
 		reward = 110 - 10*s[0][1]
@@ -106,6 +113,23 @@ class Impatient_Player(Player):
 		return reward
 
 class Normal_Player(Player):
+	STAGNANT_STATE_REWARD = -1
+	def find_reward(self, s):
+		if not s[2]:
+			return self.STAGNANT_STATE_REWARD
+		if s[1]:
+			return -1000
+		reward = 110 - 5*s[0][1]
+		if s[0][1] == 1:
+			reward -= 200
+		return reward
+
+class Random_Player(Player):
+	def next_action(self, s):
+		if s[2]:
+			return "EXIT"
+		return {1 : "DRIVE", 2 : "PARK"}[randint(1,2)]
+	
 	def find_reward(self, s):
 		if not s[2]:
 			return -1
@@ -116,14 +140,36 @@ class Normal_Player(Player):
 			reward -= 200
 		return reward
 
+class Drive_Player(Player):
+	def next_action(self, s):
+		if s[2]:
+			return "EXIT"
+		if s[1]:
+			return "DRIVE"
+		return {1 : "DRIVE", 2 : "PARK"}[randint(1,2)]
+	
+	def find_reward(self, s):
+		if not s[2]:
+			return -1
+		if s[1]:
+			return -1000
+		reward = 110 - 5*s[0][1]
+		if s[0][1] == 1:
+			reward -= 200
+		return reward
+		
 ITERATIONS = 10000
-p = Normal_Player()
+p = Impatient_Player()
 moves = 0
-for i in range(ITERATIONS):
+for i in range(5 * ITERATIONS):
 	moves += Game(p).moves
-	print
-stream = open("result_normal.txt", 'w')
-stream.write('Average moves: %f\n' % (float(moves) / ITERATIONS))
+reward = 0
+for i in range(ITERATIONS):
+	reward += Game(p).reward
+print "Average reward: " + str(float(reward) / ITERATIONS)
+stream = open("result.txt", 'w')
+stream.write('Average moves: %f\n' % (float(moves) / (5 * ITERATIONS)))
+stream.write('Average score (after training): %f\n' % (float(reward) / ITERATIONS))
 for sa in product(('A', 'B'), range(1,11), ("DRIVE", "PARK", "EXIT")):
 	stream.write('%s\t%f\n' % (str(sa), p.q[str((sa[0], sa[1], False, False, sa[2]))][0]))
 stream.write('\n\n\n')
