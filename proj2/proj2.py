@@ -219,7 +219,6 @@ for i in range(ITERATIONS):
 print "Average reward: " + str(float(reward) / ITERATIONS)
 
 stream = open("result%d.txt" % choice, 'w')
-stream.write("Average reward: " + str(float(reward) / ITERATIONS))
 stream.write('Average moves: %f\n' % (float(moves) / (5 * ITERATIONS)))
 stream.write('Average score (after training): %f\n' % (float(reward) / ITERATIONS))
 for sa in product(('A', 'B'), range(1,11), ("DRIVE", "PARK", "EXIT")):

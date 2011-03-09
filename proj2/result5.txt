@@ -1,0 +1,305 @@
+Average reward: -141.132Average moves: 8.197400
+Average score (after training): -141.132000
+('A', 1, 'DRIVE')	-1.000000
+('A', 1, 'PARK')	1.000000
+('A', 1, 'EXIT')	1.000000
+('A', 2, 'DRIVE')	1.000000
+('A', 2, 'PARK')	1.000000
+('A', 2, 'EXIT')	1.000000
+('A', 3, 'DRIVE')	1.000000
+('A', 3, 'PARK')	1.000000
+('A', 3, 'EXIT')	1.000000
+('A', 4, 'DRIVE')	-0.500000
+('A', 4, 'PARK')	0.000000
+('A', 4, 'EXIT')	0.000000
+('A', 5, 'DRIVE')	0.000000
+('A', 5, 'PARK')	453.037762
+('A', 5, 'EXIT')	1.000000
+('A', 6, 'DRIVE')	0.000000
+('A', 6, 'PARK')	666.500724
+('A', 6, 'EXIT')	1.000000
+('A', 7, 'DRIVE')	217.459991
+('A', 7, 'PARK')	563.616366
+('A', 7, 'EXIT')	1.000000
+('A', 8, 'DRIVE')	358.007422
+('A', 8, 'PARK')	687.307152
+('A', 8, 'EXIT')	549.058467
+('A', 9, 'DRIVE')	445.492599
+('A', 9, 'PARK')	603.572583
+('A', 9, 'EXIT')	529.438354
+('A', 10, 'DRIVE')	488.239726
+('A', 10, 'PARK')	1019.207344
+('A', 10, 'EXIT')	705.149258
+('B', 1, 'DRIVE')	395.283249
+('B', 1, 'PARK')	-470.698596
+('B', 1, 'EXIT')	271.596388
+('B', 2, 'DRIVE')	529.399849
+('B', 2, 'PARK')	309.466022
+('B', 2, 'EXIT')	402.654206
+('B', 3, 'DRIVE')	515.082382
+('B', 3, 'PARK')	973.911639
+('B', 3, 'EXIT')	753.837643
+('B', 4, 'DRIVE')	558.481855
+('B', 4, 'PARK')	822.034528
+('B', 4, 'EXIT')	694.900302
+('B', 5, 'DRIVE')	502.343886
+('B', 5, 'PARK')	920.497693
+('B', 5, 'EXIT')	781.585287
+('B', 6, 'DRIVE')	579.204073
+('B', 6, 'PARK')	823.149730
+('B', 6, 'EXIT')	722.067817
+('B', 7, 'DRIVE')	740.856865
+('B', 7, 'PARK')	605.180323
+('B', 7, 'EXIT')	669.234460
+('B', 8, 'DRIVE')	516.176284
+('B', 8, 'PARK')	902.462035
+('B', 8, 'EXIT')	831.433379
+('B', 9, 'DRIVE')	254.871090
+('B', 9, 'PARK')	866.266416
+('B', 9, 'EXIT')	781.435006
+('B', 10, 'DRIVE')	23.774415
+('B', 10, 'PARK')	437.398513
+('B', 10, 'EXIT')	194.181859
+
+
+
+('A', 1, True, True, 'DRIVE')	-652.734802
+('A', 1, True, True, 'PARK')	-999.000000
+('A', 1, True, True, 'EXIT')	-999.000000
+('A', 1, True, False, 'DRIVE')	-0.500000
+('A', 1, True, False, 'PARK')	42.879312
+('A', 1, True, False, 'EXIT')	0.000000
+('A', 1, False, True, 'DRIVE')	285.964068
+('A', 1, False, True, 'PARK')	-94.000000
+('A', 1, False, True, 'EXIT')	-50.069619
+('A', 1, False, False, 'DRIVE')	-1.000000
+('A', 1, False, False, 'PARK')	1.000000
+('A', 1, False, False, 'EXIT')	1.000000
+('A', 2, True, True, 'DRIVE')	-1582.555703
+('A', 2, True, True, 'PARK')	-1665.666667
+('A', 2, True, True, 'EXIT')	-1832.333333
+('A', 2, True, False, 'DRIVE')	18.857947
+('A', 2, True, False, 'PARK')	-1000.000000
+('A', 2, True, False, 'EXIT')	-0.500000
+('A', 2, False, True, 'DRIVE')	-588.108624
+('A', 2, False, True, 'PARK')	1.000000
+('A', 2, False, True, 'EXIT')	1.000000
+('A', 2, False, False, 'DRIVE')	1.000000
+('A', 2, False, False, 'PARK')	1.000000
+('A', 2, False, False, 'EXIT')	1.000000
+('A', 3, True, True, 'DRIVE')	-2002.298094
+('A', 3, True, True, 'PARK')	-2026.777778
+('A', 3, True, True, 'EXIT')	-2082.333333
+('A', 3, True, False, 'DRIVE')	0.000000
+('A', 3, True, False, 'PARK')	0.000000
+('A', 3, True, False, 'EXIT')	-0.500000
+('A', 3, False, True, 'DRIVE')	1.000000
+('A', 3, False, True, 'PARK')	1.000000
+('A', 3, False, True, 'EXIT')	1.000000
+('A', 3, False, False, 'DRIVE')	1.000000
+('A', 3, False, False, 'PARK')	1.000000
+('A', 3, False, False, 'EXIT')	1.000000
+('A', 4, True, True, 'DRIVE')	-2151.264337
+('A', 4, True, True, 'PARK')	-2282.333333
+('A', 4, True, True, 'EXIT')	-2282.333333
+('A', 4, True, False, 'DRIVE')	-0.333333
+('A', 4, True, False, 'PARK')	-1000.000000
+('A', 4, True, False, 'EXIT')	0.000000
+('A', 4, False, True, 'DRIVE')	-1478.717639
+('A', 4, False, True, 'PARK')	499.290374
+('A', 4, False, True, 'EXIT')	589.290374
+('A', 4, False, False, 'DRIVE')	-0.500000
+('A', 4, False, False, 'PARK')	0.000000
+('A', 4, False, False, 'EXIT')	0.000000
+('A', 5, True, True, 'DRIVE')	-1690.146040
+('A', 5, True, True, 'PARK')	-2082.333333
+('A', 5, True, True, 'EXIT')	-2199.785144
+('A', 5, True, False, 'DRIVE')	-0.166667
+('A', 5, True, False, 'PARK')	-1000.000000
+('A', 5, True, False, 'EXIT')	-0.500000
+('A', 5, False, True, 'DRIVE')	-368.898638
+('A', 5, False, True, 'PARK')	829.007436
+('A', 5, False, True, 'EXIT')	479.378805
+('A', 5, False, False, 'DRIVE')	0.000000
+('A', 5, False, False, 'PARK')	453.037762
+('A', 5, False, False, 'EXIT')	1.000000
+('A', 6, True, True, 'DRIVE')	-1933.992957
+('A', 6, True, True, 'PARK')	-2234.903510
+('A', 6, True, True, 'EXIT')	-2252.665258
+('A', 6, True, False, 'DRIVE')	186.300920
+('A', 6, True, False, 'PARK')	-1214.227954
+('A', 6, True, False, 'EXIT')	93.534001
+('A', 6, False, True, 'DRIVE')	205.409893
+('A', 6, False, True, 'PARK')	461.743367
+('A', 6, False, True, 'EXIT')	780.060657
+('A', 6, False, False, 'DRIVE')	0.000000
+('A', 6, False, False, 'PARK')	666.500724
+('A', 6, False, False, 'EXIT')	1.000000
+('A', 7, True, True, 'DRIVE')	-1695.323848
+('A', 7, True, True, 'PARK')	-2070.517152
+('A', 7, True, True, 'EXIT')	-2087.931298
+('A', 7, True, False, 'DRIVE')	347.480104
+('A', 7, True, False, 'PARK')	-1187.763088
+('A', 7, True, False, 'EXIT')	334.863316
+('A', 7, False, True, 'DRIVE')	-189.882195
+('A', 7, False, True, 'PARK')	315.079213
+('A', 7, False, True, 'EXIT')	663.818230
+('A', 7, False, False, 'DRIVE')	217.459991
+('A', 7, False, False, 'PARK')	563.616366
+('A', 7, False, False, 'EXIT')	1.000000
+('A', 8, True, True, 'DRIVE')	-1327.616526
+('A', 8, True, True, 'PARK')	-1411.251084
+('A', 8, True, True, 'EXIT')	-1984.822864
+('A', 8, True, False, 'DRIVE')	411.753312
+('A', 8, True, False, 'PARK')	-928.423829
+('A', 8, True, False, 'EXIT')	205.014318
+('A', 8, False, True, 'DRIVE')	-80.283552
+('A', 8, False, True, 'PARK')	491.904769
+('A', 8, False, True, 'EXIT')	800.645388
+('A', 8, False, False, 'DRIVE')	358.007422
+('A', 8, False, False, 'PARK')	687.307152
+('A', 8, False, False, 'EXIT')	549.058467
+('A', 9, True, True, 'DRIVE')	-926.509461
+('A', 9, True, True, 'PARK')	-1769.192009
+('A', 9, True, True, 'EXIT')	-1727.700670
+('A', 9, True, False, 'DRIVE')	491.173042
+('A', 9, True, False, 'PARK')	-720.665380
+('A', 9, True, False, 'EXIT')	306.461516
+('A', 9, False, True, 'DRIVE')	270.763115
+('A', 9, False, True, 'PARK')	637.602783
+('A', 9, False, True, 'EXIT')	698.117873
+('A', 9, False, False, 'DRIVE')	445.492599
+('A', 9, False, False, 'PARK')	603.572583
+('A', 9, False, False, 'EXIT')	529.438354
+('A', 10, True, True, 'DRIVE')	-329.623680
+('A', 10, True, True, 'PARK')	-999.000000
+('A', 10, True, True, 'EXIT')	-999.000000
+('A', 10, True, False, 'DRIVE')	519.934049
+('A', 10, True, False, 'PARK')	-287.013284
+('A', 10, True, False, 'EXIT')	446.672378
+('A', 10, False, True, 'DRIVE')	440.187933
+('A', 10, False, True, 'PARK')	1096.294007
+('A', 10, False, True, 'EXIT')	1074.660089
+('A', 10, False, False, 'DRIVE')	488.239726
+('A', 10, False, False, 'PARK')	1019.207344
+('A', 10, False, False, 'EXIT')	705.149258
+('B', 1, True, True, 'DRIVE')	-3126.603123
+('B', 1, True, True, 'PARK')	-1405.998278
+('B', 1, True, True, 'EXIT')	-2029.194820
+('B', 1, True, False, 'DRIVE')	452.805841
+('B', 1, True, False, 'PARK')	-479.804032
+('B', 1, True, False, 'EXIT')	168.168446
+('B', 1, False, True, 'DRIVE')	-1395.817856
+('B', 1, False, True, 'PARK')	-487.122399
+('B', 1, False, True, 'EXIT')	-487.936667
+('B', 1, False, False, 'DRIVE')	395.283249
+('B', 1, False, False, 'PARK')	-470.698596
+('B', 1, False, False, 'EXIT')	271.596388
+('B', 2, True, True, 'DRIVE')	-2217.358517
+('B', 2, True, True, 'PARK')	-2574.073995
+('B', 2, True, True, 'EXIT')	-2713.837384
+('B', 2, True, False, 'DRIVE')	522.010512
+('B', 2, True, False, 'PARK')	-2113.090206
+('B', 2, True, False, 'EXIT')	375.786527
+('B', 2, False, True, 'DRIVE')	-729.362096
+('B', 2, False, True, 'PARK')	402.337794
+('B', 2, False, True, 'EXIT')	622.050437
+('B', 2, False, False, 'DRIVE')	529.399849
+('B', 2, False, False, 'PARK')	309.466022
+('B', 2, False, False, 'EXIT')	402.654206
+('B', 3, True, True, 'DRIVE')	-1704.697954
+('B', 3, True, True, 'PARK')	-2486.000464
+('B', 3, True, True, 'EXIT')	-2562.462397
+('B', 3, True, False, 'DRIVE')	560.310349
+('B', 3, True, False, 'PARK')	-1720.075956
+('B', 3, True, False, 'EXIT')	422.756269
+('B', 3, False, True, 'DRIVE')	-818.011024
+('B', 3, False, True, 'PARK')	635.795617
+('B', 3, False, True, 'EXIT')	1073.743090
+('B', 3, False, False, 'DRIVE')	515.082382
+('B', 3, False, False, 'PARK')	973.911639
+('B', 3, False, False, 'EXIT')	753.837643
+('B', 4, True, True, 'DRIVE')	-1269.037105
+('B', 4, True, True, 'PARK')	-2235.374163
+('B', 4, True, True, 'EXIT')	-2221.357622
+('B', 4, True, False, 'DRIVE')	610.629000
+('B', 4, True, False, 'PARK')	-1297.405747
+('B', 4, True, False, 'EXIT')	439.869207
+('B', 4, False, True, 'DRIVE')	-356.245486
+('B', 4, False, True, 'PARK')	737.707889
+('B', 4, False, True, 'EXIT')	914.399871
+('B', 4, False, False, 'DRIVE')	558.481855
+('B', 4, False, False, 'PARK')	822.034528
+('B', 4, False, False, 'EXIT')	694.900302
+('B', 5, True, True, 'DRIVE')	-1077.269815
+('B', 5, True, True, 'PARK')	-2019.677210
+('B', 5, True, True, 'EXIT')	-2152.221659
+('B', 5, True, False, 'DRIVE')	608.978708
+('B', 5, True, False, 'PARK')	-1263.394202
+('B', 5, True, False, 'EXIT')	449.221348
+('B', 5, False, True, 'DRIVE')	-223.304091
+('B', 5, False, True, 'PARK')	563.412945
+('B', 5, False, True, 'EXIT')	1012.435359
+('B', 5, False, False, 'DRIVE')	502.343886
+('B', 5, False, False, 'PARK')	920.497693
+('B', 5, False, False, 'EXIT')	781.585287
+('B', 6, True, True, 'DRIVE')	-766.841810
+('B', 6, True, True, 'PARK')	-1895.786510
+('B', 6, True, True, 'EXIT')	-1802.302993
+('B', 6, True, False, 'DRIVE')	622.308258
+('B', 6, True, False, 'PARK')	-930.290226
+('B', 6, True, False, 'EXIT')	455.870554
+('B', 6, False, True, 'DRIVE')	-37.952590
+('B', 6, False, True, 'PARK')	469.198645
+('B', 6, False, True, 'EXIT')	908.485756
+('B', 6, False, False, 'DRIVE')	579.204073
+('B', 6, False, False, 'PARK')	823.149730
+('B', 6, False, False, 'EXIT')	722.067817
+('B', 7, True, True, 'DRIVE')	-866.083774
+('B', 7, True, True, 'PARK')	-1763.538096
+('B', 7, True, True, 'EXIT')	-1700.055436
+('B', 7, True, False, 'DRIVE')	715.481650
+('B', 7, True, False, 'PARK')	-890.714546
+('B', 7, True, False, 'EXIT')	553.847350
+('B', 7, False, True, 'DRIVE')	394.364665
+('B', 7, False, True, 'PARK')	657.139734
+('B', 7, False, True, 'EXIT')	981.433743
+('B', 7, False, False, 'DRIVE')	740.856865
+('B', 7, False, False, 'PARK')	605.180323
+('B', 7, False, False, 'EXIT')	669.234460
+('B', 8, True, True, 'DRIVE')	-643.667608
+('B', 8, True, True, 'PARK')	-1499.000000
+('B', 8, True, True, 'EXIT')	-1607.074938
+('B', 8, True, False, 'DRIVE')	597.173649
+('B', 8, True, False, 'PARK')	-672.325508
+('B', 8, True, False, 'EXIT')	382.157843
+('B', 8, False, True, 'DRIVE')	342.857326
+('B', 8, False, True, 'PARK')	680.675560
+('B', 8, False, True, 'EXIT')	966.287364
+('B', 8, False, False, 'DRIVE')	516.176284
+('B', 8, False, False, 'PARK')	902.462035
+('B', 8, False, False, 'EXIT')	831.433379
+('B', 9, True, True, 'DRIVE')	-779.745771
+('B', 9, True, True, 'PARK')	-999.000000
+('B', 9, True, True, 'EXIT')	-999.000000
+('B', 9, True, False, 'DRIVE')	301.973189
+('B', 9, True, False, 'PARK')	-727.958858
+('B', 9, True, False, 'EXIT')	99.237969
+('B', 9, False, True, 'DRIVE')	12.342064
+('B', 9, False, True, 'PARK')	1147.136754
+('B', 9, False, True, 'EXIT')	829.770921
+('B', 9, False, False, 'DRIVE')	254.871090
+('B', 9, False, False, 'PARK')	866.266416
+('B', 9, False, False, 'EXIT')	781.435006
+('B', 10, True, True, 'DRIVE')	-1677.680188
+('B', 10, True, True, 'PARK')	-1832.333333
+('B', 10, True, True, 'EXIT')	-1832.333333
+('B', 10, True, False, 'DRIVE')	86.463535
+('B', 10, True, False, 'PARK')	1.000000
+('B', 10, True, False, 'EXIT')	1.000000
+('B', 10, False, True, 'DRIVE')	-543.296770
+('B', 10, False, True, 'PARK')	219.721522
+('B', 10, False, True, 'EXIT')	514.592334
+('B', 10, False, False, 'DRIVE')	23.774415
+('B', 10, False, False, 'PARK')	437.398513
+('B', 10, False, False, 'EXIT')	194.181859
