@@ -74,7 +74,7 @@ class Simulation:
                     elif num_of_each[i] == 3:
                         three = True
                 if two and three:
-                    self.scores[action] = 25;
+                    self.scores[action] = 25
             elif action == 'Small straight':
                 count = 0
                 sequence = False
@@ -82,11 +82,12 @@ class Simulation:
                     if num_of_each[i] > 0:
                         sequence = True
                         count += 1
+                        if count >= 4:
+                            self.scores[action] = 30
+                            break
                     else:
                         sequence = False
                         count = 0
-                if count >= 4:
-                    self.scores[action] = 30
             elif action == 'Large straight':
                  count = 0
                  for i in range(2,6):
@@ -130,11 +131,11 @@ class HumanAgent(Agent):
         
         # Prompt for dice to keep if there are still rolls left
         if rolls_left != 0:
-            print 'Enter the dice to keep, inside of square brackets, e.g. [1135]'
+            print 'Enter the dice to keep, e.g. 1135'
             keep = '[0]'
-            while (keep[0] != '[' or (not self.subset(current_dice, keep[1:-1])) or keep[-1] != ']'):
+            while not self.subset(current_dice, keep):
                 keep = raw_input()
-            return keep[1:-1]
+            return keep
             
         # Prompt for category to choose if there are no rolls left
         else:
