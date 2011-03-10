@@ -335,6 +335,7 @@ class LearningAgent(Agent):
 	def get_action(self, state):
 		#TODO
 		#return policy[FEATURIZED_STATE]
+		pass
 
 # Uses a reward function to find the next action
 class PlanningAgent(Agent):
@@ -342,4 +343,5 @@ class PlanningAgent(Agent):
 	def get_action(self, state):
 		#TODO
 		#return action that causes maximum next-state reward (greedy)
+		pass
 Simulation(agent=StrategicAgent(), show_output=True)
