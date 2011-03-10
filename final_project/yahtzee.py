@@ -329,4 +329,17 @@ class StrategicAgent(Agent):
 				selected_category = category
 		return selected_category
 
+# Learns an action policy with filtered state features 
+class LearningAgent(Agent):
+	#policy = {FEATURIZED_STATE, '1s'}
+	def get_action(self, state):
+		#TODO
+		#return policy[FEATURIZED_STATE]
+
+# Uses a reward function to find the next action
+class PlanningAgent(Agent):
+	#state_value {FEATURIZED_STATE, reward}
+	def get_action(self, state):
+		#TODO
+		#return action that causes maximum next-state reward (greedy)
 Simulation(agent=StrategicAgent(), show_output=True)
