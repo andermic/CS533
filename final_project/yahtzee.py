@@ -5,15 +5,15 @@ from random import choice
 import math
 
 def product(*args, **kwds):
-        "cartesian product"
-        # product('ABCD', 'xy') --> Ax Ay Bx By Cx Cy Dx Dy
-        # product(range(2), repeat=3) --> 000 001 010 011 100 101 110 111
-        pools = map(tuple, args) * kwds.get('repeat', 1)
-        result = [[]]
-        for pool in pools:
-            result = [x+[y] for x in result for y in pool]
-        for prod in result:
-            yield tuple(prod)
+		"cartesian product"
+		# product('ABCD', 'xy') --> Ax Ay Bx By Cx Cy Dx Dy
+		# product(range(2), repeat=3) --> 000 001 010 011 100 101 110 111
+		pools = map(tuple, args) * kwds.get('repeat', 1)
+		result = [[]]
+		for pool in pools:
+			result = [x+[y] for x in result for y in pool]
+		for prod in result:
+			yield tuple(prod)
 
 def cat_score(category, current_dice):
 	num_of_each = [None,0,0,0,0,0,0]
@@ -64,12 +64,12 @@ def cat_score(category, current_dice):
 				sequence = False
 				count = 0
 	elif category == 'Large straight':
-		 count = 0
-		 for i in range(2,6):
-			 if num_of_each[i] == 1:
-				 count += 1
-		 if (count == 4) and (num_of_each[1] == 1 or num_of_each[6] == 1):
-			 score = 40
+		count = 0
+		for i in range(1,7):
+			if num_of_each[i] == 1:
+				count += 1
+		if (count == 5) and (num_of_each[1] == 0 or num_of_each[6] == 0):
+			score = 40
 	elif category == 'Yahtzee':
 		for i in range(1,7):
 			if num_of_each[i] == 5:
@@ -81,83 +81,87 @@ def cat_score(category, current_dice):
 
 # Simulates the yahtzee game
 class Simulation:
-    CATS = ['Yahtzee', '4 of a kind', 'Large straight', 'Full house', 
-	  '3 of a kind', 'Small straight', "6s", "5s",  "4s",  "3s", "2s",
-	  "1s", 'Chance']
-    categories = CATS[:]
-    scores = {}
+	CATS = ['Yahtzee', '4 of a kind', 'Large straight', 'Full house', 
+	'3 of a kind', 'Small straight', "6s", "5s",  "4s",  "3s", "2s",
+	"1s", 'Chance']
+	categories = CATS[:]
+	scores = {}
 	
-    # Run the simulation
-    def __init__(self, agent, show_output):
-        # Keep asking the agent for actions until no more categories remain
-        while len(self.categories) != 0:
+	# Run the simulation
+	def run(self, agent, show_output):
+		self.categories = self.CATS[:]
+		self.scores = {}
+		# Keep asking the agent for actions until no more categories remain
+		while len(self.categories) != 0:
 
-            action = ''     # Contains the dice kept or the category chosen
+			action = ''     # Contains the dice kept or the category chosen
 
-            # Give the agent 3 rolls
-            for i in range(1,4):
-                # State consists of a 3-tuple: The categories left to
-                #  choose from, the number of rolls remaining in this
-                #  round, and the current dice.
-                rolls_left = 3 - i
-                current_dice = ''.join(sorted(action + ''.join([str(randint(1,6)) for i in range(6 - len(action))])))
-                state = (self.categories, rolls_left, current_dice)
+			# Give the agent 3 rolls
+			for i in range(1,4):
+				# State consists of a 3-tuple: The categories left to
+				#  choose from, the number of rolls remaining in this
+				#  round, and the current dice.
+				rolls_left = 3 - i
+				current_dice = ''.join(sorted(action + ''.join([str(randint(1,6)) for i in range(5 - len(action))])))
+				state = (self.categories, rolls_left, current_dice)
 
-                if show_output:
-                    for c in self.CATS:
-                        if c in self.scores:
-                            print '%s: %d' % (c, self.scores[c])
-                    print 'Current roll: ' + '-'.join(current_dice)
-                    print 'Rolls left this round: ' + str(rolls_left)
+				if show_output:
+					print 'Current roll: ' + '-'.join(current_dice)
+					print 'Rolls left this round: ' + str(rolls_left)
+					print
+					print
 
-                action = agent.get_action(state)
-                print
-                print
-
-            # action now holds the category chosen. Score it.
-            self.categories.remove(action)
-            self.scores[action] = cat_score(action, current_dice)
-        total_score = sum([i for i in self.scores.values()])
-        if sum([self.scores[i] for i in self.scores.keys() if len(i) == 2]) >= 63:
-            total_score += 35
-        print 'Total Score: %d' % total_score
+				action = agent.get_action(state)
+				
+			# action now holds the category chosen. Score it.
+			self.categories.remove(action)
+			self.scores[action] = cat_score(action, current_dice)
+			if show_output:
+				for c in self.CATS:
+					if c in self.scores:
+						print '%s: %d' % (c, self.scores[c])
+						
+		total_score = sum([i for i in self.scores.values()])
+		if sum([self.scores[i] for i in self.scores.keys() if len(i) == 2]) >= 63:
+			total_score += 35
+		print 'Total Score: %d' % total_score
 		
 # Provides actions given the state of the game
 class Agent:
-    def get_action(self, state):
-        return None
+	def get_action(self, state):
+		return None
 
 # Provides actions by prompting the user to take an action
 class HumanAgent(Agent):
-    # Finds subsets of a string, helper function for get_action
-    def subset(self, super, sub):
-        for char in sub:
-            if super.find(char) == -1:
-                return False
-            else:
-                super = super.replace(char,'',1)
-        return True
+	# Finds subsets of a string, helper function for get_action
+	def subset(self, super, sub):
+		for char in sub:
+			if super.find(char) == -1:
+				return False
+			else:
+				super = super.replace(char,'',1)
+		return True
 
-    def get_action(self, state):
-        categories = state[0]
-        rolls_left = state[1]
-        current_dice = state[2]
-        
-        # Prompt for dice to keep if there are still rolls left
-        if rolls_left != 0:
-            print 'Enter the dice to keep, e.g. 1135'
-            keep = '[0]'
-            while not self.subset(current_dice, keep):
-                keep = raw_input()
-            return keep
-            
-        # Prompt for category to choose if there are no rolls left
-        else:
-            choice = None
-            print 'Choose a category(%s)' % ', '.join(categories)
-            while not choice in categories:
-                choice = raw_input()
-            return choice
+	def get_action(self, state):
+		categories = state[0]
+		rolls_left = state[1]
+		current_dice = state[2]
+		
+		# Prompt for dice to keep if there are still rolls left
+		if rolls_left != 0:
+			print 'Enter the dice to keep, e.g. 1135'
+			keep = '[0]'
+			while not self.subset(current_dice, keep):
+				keep = raw_input()
+			return keep
+			
+		# Prompt for category to choose if there are no rolls left
+		else:
+			choice = None
+			print 'Choose a category(%s)' % ', '.join(categories)
+			while not choice in categories:
+				choice = raw_input()
+			return choice
 
 # Provides actions randomly
 class RandomAgent(Agent):
@@ -171,7 +175,7 @@ class RandomAgent(Agent):
 			keep = ''
 			for d in current_dice:
 				if randint(0,1) == 1:
-					keep = keep + d;
+					keep += d;
 			return keep
 		
 		# Randomly choose category
@@ -194,7 +198,7 @@ class GreedyAgent(Agent):
 			for d in current_dice:
 				num_of_each[int(d)] += 1
 			if max_duplicates > 2:
-				for i in range(1,6):
+				for i in range(1,7):
 					if num_of_each[i] > 2:
 						dominant_die = i
 						break
@@ -214,32 +218,32 @@ class GreedyAgent(Agent):
 			
 			# If we have a good chance of a good 'kind' score or a good 'chance' score
 			elif (max_duplicates == 3) and ((kind) or (chance)):
-				keep = ''.join(dominant_die for i in range(1, 3))
+				keep = ''.join(dominant_die for i in range(1, 4))
 			
 			# If we have a good chance of a full house
 			elif (max_duplicates == 3) and (fHouse):
-				keep = ''.join(dominant_die for i in range(1, 3))
-				for i in range(6,1):
+				keep = ''.join(dominant_die for i in range(1, 4))
+				for i in range(6,0):
 					if num_of_each[i] == 2:
 						keep = ''.join(current_dice)
 					elif num_of_each[i] == 1:
-						keep = keep + str(i)
+						keep += str(i)
 						break
 						
 			# If we might have a good chance of a full house or straight
 			elif (max_duplicates == 2) and ((fHouse) or (straight)):
 				if fHouse:
-					for i in range (dominant_die - 1, 1):
+					for i in range (dominant_die - 1, 0):
 						if num_of_each[i] == 2:
-							keep = ''.join(dominant_die for j in range(1,2)).join(i for k in range(1,2))
+							keep = ''.join(dominant_die for j in range(1,3)).join(i for k in range(1,3))
 							break
 				else:
-					for i in range (dominant_die - 1, 1):
+					for i in range (dominant_die - 1, 0):
 						if num_of_each[i] == 2:
 							return ''
-					for i in range(1,6):
+					for i in range(1,7):
 						if num_of_each[i] > 0:
-							keep = keep + str(i)
+							keep += str(i)
 
 			# If we have a straight
 			elif (max_duplicates == 1) and (straight):
@@ -260,8 +264,8 @@ class GreedyAgent(Agent):
 # Chooses action closest to maximum potential
 class StrategicAgent(Agent):
 	CAT_MAX_VALUE = {"1s" : 5, "2s" : 10, "3s" : 15, "4s" : 20, "5s" : 25, "6s" : 30,
-     '3 of a kind' : 30, '4 of a kind' : 30, 'Full house' : 25, 'Small straight' : 30, 
-     'Large straight' : 40, 'Yahtzee' : 50, 'Chance' : 30}
+	'3 of a kind' : 30, '4 of a kind' : 30, 'Full house' : 25, 'Small straight' : 30, 
+	'Large straight' : 40, 'Yahtzee' : 50, 'Chance' : 30}
 	def get_action(self, state):
 		categories = state[0]
 		rolls_left = state[1]
@@ -276,7 +280,7 @@ class StrategicAgent(Agent):
 			for d in current_dice:
 				num_of_each[int(d)] += 1
 			if max_duplicates > 2:
-				for i in range(1,6):
+				for i in range(1,7):
 					if num_of_each[i] > 2:
 						dominant_die = i
 						break
@@ -296,32 +300,32 @@ class StrategicAgent(Agent):
 			
 			# If we have a good chance of a good 'kind' score or a good 'chance' score
 			elif (max_duplicates == 3) and ((kind) or (chance)):
-				keep = ''.join(dominant_die for i in range(1, 3))
+				keep = ''.join(dominant_die for i in range(1, 4))
 			
 			# If we have a good chance of a full house
 			elif (max_duplicates == 3) and (fHouse):
-				keep = ''.join(dominant_die for i in range(1, 3))
-				for i in range(6,1):
+				keep = ''.join(dominant_die for i in range(1, 4))
+				for i in range(6,0):
 					if num_of_each[i] == 2:
 						keep = ''.join(current_dice)
 					elif num_of_each[i] == 1:
-						keep = keep + str(i)
+						keep += str(i)
 						break
 						
 			# If we might have a good chance of a full house or straight
 			elif (max_duplicates == 2) and ((fHouse) or (straight)):
 				if fHouse:
-					for i in range (dominant_die - 1, 1):
+					for i in range (dominant_die - 1, 0):
 						if num_of_each[i] == 2:
-							keep = ''.join(dominant_die for j in range(1,2)).join(i for k in range(1,2))
+							keep = ''.join(dominant_die for j in range(1,3)).join(i for k in range(1,3))
 							break
 				else:
-					for i in range (dominant_die - 1, 1):
+					for i in range (dominant_die - 1, 0):
 						if num_of_each[i] == 2:
 							return ''
-					for i in range(1,6):
+					for i in range(1,7):
 						if num_of_each[i] > 0:
-							keep = keep + str(i)
+							keep += str(i)
 
 			# If we have a straight
 			elif (max_duplicates == 1) and (straight):
@@ -338,18 +342,12 @@ class StrategicAgent(Agent):
 				selected_category = category
 		return selected_category
 
-# Learns an action policy with filtered state features 
-class LearningAgent(Agent):
-	#policy = {FEATURIZED_STATE, '1s'}
-	def get_action(self, state):
-		#TODO
-		#return policy[FEATURIZED_STATE]
-		pass
-
 # Uses a UniformBandit algorithm for determining which dice to keep based on score
 class PlanningAgentGreedy(Agent):
-	MAX_ITERATIONS_PER_PERMUTATION = 100
+	MAX_ITERATIONS_PER_PERMUTATION = 20
 	
+	# Returns the maximum number of points this dice 
+	#  configuration can achieve in the available categories
 	def max_score(self, state):
 		categories = state[0]
 		current_dice = state[2]
@@ -360,7 +358,10 @@ class PlanningAgentGreedy(Agent):
 			if max_score < temp:
 				max_score = temp
 		return max_score
-		
+	
+	# Recursively tests each possible dice configuration to
+	#  estimate the value of a particular state and returns
+	#  the dice to save at the given state
 	def best_dice(self, state):
 		categories = state[0]
 		rolls_left = state[1]
@@ -378,10 +379,12 @@ class PlanningAgentGreedy(Agent):
 			permutation_score = 0
 			for i in range(0,5):
 				if permutation[i] == 1:
-					keep_permutation = keep_permutation + str(current_dice[i])
-			for n in range(1, self.MAX_ITERATIONS_PER_PERMUTATION):
-				new_dice = ''.join(sorted(keep_permutation + ''.join([str(randint(1,6)) for i in range(6 - len(keep_permutation))])))
-				permutation_score = (self.best_dice((categories, rolls_left - 1, new_dice))[1] - permutation_score) / float(n)
+					keep_permutation += str(current_dice[i])
+			# Simulate die rolls for some number of iterations
+			for n in range(1, self.MAX_ITERATIONS_PER_PERMUTATION + 1):
+				new_dice = ''.join(sorted(keep_permutation + ''.join([str(randint(1,6)) for i in range(5 - len(keep_permutation))])))
+				# Calculate the running average score that this state can result in
+				permutation_score += (self.best_dice((categories, rolls_left - 1, new_dice))[1] - permutation_score) / float(n)
 			if permutation_score > best_score:
 				best_permutation = keep_permutation
 				best_score = permutation_score
@@ -395,7 +398,7 @@ class PlanningAgentGreedy(Agent):
 		if rolls_left != 0:
 			return self.best_dice(state)[0]
 			
-		# Choose category which fulfills its potential the best
+		# Choose category which gives the highest score
 		selected_category = ''
 		max_score = -1
 		for category in categories:
@@ -409,9 +412,11 @@ class PlanningAgentGreedy(Agent):
 class PlanningAgentStrategic(Agent):
 	MAX_ITERATIONS_PER_PERMUTATION = 10
 	CAT_MAX_VALUE = {"1s" : 5, "2s" : 10, "3s" : 15, "4s" : 20, "5s" : 25, "6s" : 30,
-     '3 of a kind' : 30, '4 of a kind' : 30, 'Full house' : 25, 'Small straight' : 30, 
-     'Large straight' : 40, 'Yahtzee' : 50, 'Chance' : 30}
+	'3 of a kind' : 30, '4 of a kind' : 30, 'Full house' : 25, 'Small straight' : 30, 
+	'Large straight' : 40, 'Yahtzee' : 50, 'Chance' : 30}
 	
+	# Returns the maximum potential this dice configuration 
+	#  can achieve in the available categories
 	def max_potential(self, state):
 		categories = state[0]
 		current_dice = state[2]
@@ -422,7 +427,10 @@ class PlanningAgentStrategic(Agent):
 			if max_potential < temp:
 				max_potential = temp
 		return max_potential
-		
+	
+	# Recursively tests each possible dice configuration to
+	#  estimate the value of a particular state and returns
+	#  the dice to save at the given state
 	def best_dice(self, state):
 		categories = state[0]
 		rolls_left = state[1]
@@ -440,10 +448,12 @@ class PlanningAgentStrategic(Agent):
 			permutation_potential = 0
 			for i in range(0,5):
 				if permutation[i] == 1:
-					keep_permutation = keep_permutation + str(current_dice[i])
-			for n in range(1, self.MAX_ITERATIONS_PER_PERMUTATION):
-				new_dice = ''.join(sorted(keep_permutation + ''.join([str(randint(1,6)) for i in range(6 - len(keep_permutation))])))
-				permutation_potential = (self.best_dice((categories, rolls_left - 1, new_dice))[1] - permutation_potential) / float(n)
+					keep_permutation += str(current_dice[i])
+			# Simulate die rolls for some number of iterations
+			for n in range(1, self.MAX_ITERATIONS_PER_PERMUTATION + 1):
+				new_dice = ''.join(sorted(keep_permutation + ''.join([str(randint(1,6)) for i in range(5 - len(keep_permutation))])))
+				# Calculate the running average potential that this state can result in
+				permutation_potential += (self.best_dice((categories, rolls_left - 1, new_dice))[1] - permutation_potential) / float(n)
 			if permutation_potential > best_potential:
 				best_permutation = keep_permutation
 				best_potential = permutation_potential
@@ -466,5 +476,28 @@ class PlanningAgentStrategic(Agent):
 				max_potential = temp
 				selected_category = category
 		return selected_category
-
-Simulation(agent=PlanningAgentGreedy(), show_output=True)
+MAX_RUNS = 20
+simulation = Simulation()
+print "Random:"
+for i in range(0, MAX_RUNS):
+	simulation.run(RandomAgent(), show_output=False)
+print
+print
+print "Greedy:"
+for i in range(0, MAX_RUNS):
+	simulation.run(GreedyAgent(), show_output=False)
+print
+print
+print "Strategic:"
+for i in range(0, MAX_RUNS):
+	simulation.run(agent=StrategicAgent(), show_output=False)
+print
+print
+print "Planned Greedy:"
+for i in range(0, MAX_RUNS):
+	simulation.run(agent=PlanningAgentGreedy(), show_output=False)
+print
+print
+print "Planned Strategic:"
+for i in range(0, MAX_RUNS):
+	simulation.run(agent=PlanningAgentStrategic(), show_output=False)
