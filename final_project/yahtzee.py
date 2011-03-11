@@ -103,7 +103,7 @@ class Simulation:
 				#  round, and the current dice.
 				rolls_left = 3 - i
 				current_dice = ''.join(sorted(action + ''.join([str(randint(1,6)) for i in range(5 - len(action))])))
-				state = (self.categories, rolls_left, current_dice)
+				state = (self.categories, rolls_left, current_dice, self.scores)
 
 				if show_output:
 					print 'Current roll: ' + '-'.join(current_dice)
@@ -344,19 +344,23 @@ class StrategicAgent(Agent):
 
 # Uses a UniformBandit algorithm for determining which dice to keep based on score
 class PlanningAgentGreedy(Agent):
-	MAX_ITERATIONS_PER_PERMUTATION = 20
+	MAX_ITERATIONS_PER_PERMUTATION = 10
 	
 	# Returns the maximum number of points this dice 
 	#  configuration can achieve in the available categories
 	def max_score(self, state):
 		categories = state[0]
 		current_dice = state[2]
+		scores = state[3]
 		max_score = -1
-		
+		sum_single_numbers = sum([scores[i] for i in scores.keys() if len(i) == 2])
 		for category in categories:
 			temp = cat_score(category, current_dice)
+			if (sum_single_numbers < 63) and (len(category) == 2) and ((temp + sum_single_numbers) >= 63):
+				temp += 35
 			if max_score < temp:
 				max_score = temp
+		
 		return max_score
 	
 	# Recursively tests each possible dice configuration to
@@ -366,6 +370,7 @@ class PlanningAgentGreedy(Agent):
 		categories = state[0]
 		rolls_left = state[1]
 		current_dice = state[2]
+		scores = state[3]
 		best_permutation = ''
 		best_score = -1
 		
@@ -384,7 +389,7 @@ class PlanningAgentGreedy(Agent):
 			for n in range(1, self.MAX_ITERATIONS_PER_PERMUTATION + 1):
 				new_dice = ''.join(sorted(keep_permutation + ''.join([str(randint(1,6)) for i in range(5 - len(keep_permutation))])))
 				# Calculate the running average score that this state can result in
-				permutation_score += (self.best_dice((categories, rolls_left - 1, new_dice))[1] - permutation_score) / float(n)
+				permutation_score += (self.best_dice((categories, rolls_left - 1, new_dice, scores))[1] - permutation_score) / float(n)
 			if permutation_score > best_score:
 				best_permutation = keep_permutation
 				best_score = permutation_score
