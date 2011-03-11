@@ -2,7 +2,18 @@
 
 from random import randint
 from random import choice
-from math import pow
+import math
+
+def product(*args, **kwds):
+        "cartesian product"
+        # product('ABCD', 'xy') --> Ax Ay Bx By Cx Cy Dx Dy
+        # product(range(2), repeat=3) --> 000 001 010 011 100 101 110 111
+        pools = map(tuple, args) * kwds.get('repeat', 1)
+        result = [[]]
+        for pool in pools:
+            result = [x+[y] for x in result for y in pool]
+        for prod in result:
+            yield tuple(prod)
 
 def cat_score(category, current_dice):
 	num_of_each = [None,0,0,0,0,0,0]
@@ -70,9 +81,9 @@ def cat_score(category, current_dice):
 
 # Simulates the yahtzee game
 class Simulation:
-    CATS = ["1s", "2s", "3s", "4s", "5s", "6s",
-     '3 of a kind', '4 of a kind', 'Full house', 'Small straight', 
-     'Large straight', 'Yahtzee', 'Chance']
+    CATS = ['Yahtzee', '4 of a kind', 'Large straight', 'Full house', 
+	  '3 of a kind', 'Small straight', "6s", "5s",  "4s",  "3s", "2s",
+	  "1s", 'Chance']
     categories = CATS[:]
     scores = {}
 	
@@ -85,11 +96,6 @@ class Simulation:
 
             # Give the agent 3 rolls
             for i in range(1,4):
-                if show_output:
-                    for c in self.CATS:
-                        if c in self.scores:
-                            print '%s: %d' % (c, self.scores[c])
-
                 # State consists of a 3-tuple: The categories left to
                 #  choose from, the number of rolls remaining in this
                 #  round, and the current dice.
@@ -98,6 +104,9 @@ class Simulation:
                 state = (self.categories, rolls_left, current_dice)
 
                 if show_output:
+                    for c in self.CATS:
+                        if c in self.scores:
+                            print '%s: %d' % (c, self.scores[c])
                     print 'Current roll: ' + '-'.join(current_dice)
                     print 'Rolls left this round: ' + str(rolls_left)
 
@@ -337,11 +346,125 @@ class LearningAgent(Agent):
 		#return policy[FEATURIZED_STATE]
 		pass
 
-# Uses a reward function to find the next action
-class PlanningAgent(Agent):
-	#state_value {FEATURIZED_STATE, reward}
+# Uses a UniformBandit algorithm for determining which dice to keep based on score
+class PlanningAgentGreedy(Agent):
+	MAX_ITERATIONS_PER_PERMUTATION = 100
+	
+	def max_score(self, state):
+		categories = state[0]
+		current_dice = state[2]
+		max_score = -1
+		
+		for category in categories:
+			temp = cat_score(category, current_dice)
+			if max_score < temp:
+				max_score = temp
+		return max_score
+		
+	def best_dice(self, state):
+		categories = state[0]
+		rolls_left = state[1]
+		current_dice = state[2]
+		best_permutation = ''
+		best_score = -1
+		
+		# Base case, return the current dice and the configuration's max potential
+		if rolls_left == 0:
+			return (''.join(current_dice), self.max_score(state))
+		
+		# permutation => 00000, 00001, 00010, ..., 11111
+		for permutation in product(range(2), repeat=5):
+			keep_permutation = ''
+			permutation_score = 0
+			for i in range(0,5):
+				if permutation[i] == 1:
+					keep_permutation = keep_permutation + str(current_dice[i])
+			for n in range(1, self.MAX_ITERATIONS_PER_PERMUTATION):
+				new_dice = ''.join(sorted(keep_permutation + ''.join([str(randint(1,6)) for i in range(6 - len(keep_permutation))])))
+				permutation_score = (self.best_dice((categories, rolls_left - 1, new_dice))[1] - permutation_score) / float(n)
+			if permutation_score > best_score:
+				best_permutation = keep_permutation
+				best_score = permutation_score
+		return (best_permutation, best_score);
+	
 	def get_action(self, state):
-		#TODO
-		#return action that causes maximum next-state reward (greedy)
-		pass
-Simulation(agent=StrategicAgent(), show_output=True)
+		categories = state[0]
+		rolls_left = state[1]
+		current_dice = state[2]
+		
+		if rolls_left != 0:
+			return self.best_dice(state)[0]
+			
+		# Choose category which fulfills its potential the best
+		selected_category = ''
+		max_score = -1
+		for category in categories:
+			temp = cat_score(category, current_dice)
+			if max_score < temp:
+				max_score = temp
+				selected_category = category
+		return selected_category
+		
+# Uses a UniformBandit algorithm for determining which dice to keep based on category potentials
+class PlanningAgentStrategic(Agent):
+	MAX_ITERATIONS_PER_PERMUTATION = 10
+	CAT_MAX_VALUE = {"1s" : 5, "2s" : 10, "3s" : 15, "4s" : 20, "5s" : 25, "6s" : 30,
+     '3 of a kind' : 30, '4 of a kind' : 30, 'Full house' : 25, 'Small straight' : 30, 
+     'Large straight' : 40, 'Yahtzee' : 50, 'Chance' : 30}
+	
+	def max_potential(self, state):
+		categories = state[0]
+		current_dice = state[2]
+		max_potential = -1
+		
+		for category in categories:
+			temp = cat_score(category, current_dice) / float(self.CAT_MAX_VALUE[category])
+			if max_potential < temp:
+				max_potential = temp
+		return max_potential
+		
+	def best_dice(self, state):
+		categories = state[0]
+		rolls_left = state[1]
+		current_dice = state[2]
+		best_permutation = ''
+		best_potential = -1
+		
+		# Base case, return the current dice and the configuration's max potential
+		if rolls_left == 0:
+			return (''.join(current_dice), self.max_potential(state))
+		
+		# permutation => 00000, 00001, 00010, ..., 11111
+		for permutation in product(range(2), repeat=5):
+			keep_permutation = ''
+			permutation_potential = 0
+			for i in range(0,5):
+				if permutation[i] == 1:
+					keep_permutation = keep_permutation + str(current_dice[i])
+			for n in range(1, self.MAX_ITERATIONS_PER_PERMUTATION):
+				new_dice = ''.join(sorted(keep_permutation + ''.join([str(randint(1,6)) for i in range(6 - len(keep_permutation))])))
+				permutation_potential = (self.best_dice((categories, rolls_left - 1, new_dice))[1] - permutation_potential) / float(n)
+			if permutation_potential > best_potential:
+				best_permutation = keep_permutation
+				best_potential = permutation_potential
+		return (best_permutation, best_potential);
+	
+	def get_action(self, state):
+		categories = state[0]
+		rolls_left = state[1]
+		current_dice = state[2]
+		
+		if rolls_left != 0:
+			return self.best_dice(state)[0]
+			
+		# Choose category which fulfills its potential the best
+		selected_category = ''
+		max_potential = -1
+		for category in categories:
+			temp = cat_score(category, current_dice) / float(self.CAT_MAX_VALUE[category])
+			if max_potential < temp:
+				max_potential = temp
+				selected_category = category
+		return selected_category
+
+Simulation(agent=PlanningAgentGreedy(), show_output=True)
