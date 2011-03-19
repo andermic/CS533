@@ -74,9 +74,75 @@ $M'$
 
 \end{center}
 
+
 \section{}
+Let $g(\theta_1,...,\theta_n) = e^{Q_{\theta}(s,a)}$ and $h(\theta_1,...,
+\theta_n) = \sum_{a'} e^{Q_{\theta}(s,a')}$. Then $\pi_{\theta}(s,a) = g/h$
+and we want to compute:
+
+\[
+\frac{\partial log(\frac{g}{h})}{\partial \theta_i}
+\]
+
+Using $'$ as shorthand for the partial derivative in question, and applying the
+chain rule and quotient rule gives:
+
+\[
+\frac{\partial log(\frac{g}{h})}{\partial \theta_i} = 
+\frac{h}{g} \times \frac{\partial \frac{g}{h}}{\partial \theta_i} = 
+\frac{h}{g} \times \frac{g'h-gh'}{h^2} = \frac{g'}{g} - \frac{h'}{h}
+\]
+
+Need to apply the chain rule to differentiate g, and the hard part is
+differentiating the $Q_\theta(s,a)$ portion. Since all of the parts of the 
+summation that
+defines $Q_{\pi}$ are constant or held constant excepting $\theta_i$, 
+$Q'_{\pi}(s,a)$ is simply $f_i(s,a)$. So we get:
+
+\[
+g' = \frac{\partial e^{Q_{\theta}(s,a)}}{\partial \theta_i} =
+f_i(s,a) e^{Q_{\theta}(s,a)}
+\]
+
+Differentiating h is similar:
+
+\[
+h' = \frac{\partial \sum_{a'}e^{Q_{\theta}(s,a')}}{\partial \theta_i} = 
+\sum_{a'} \frac{\partial e^{Q_{\theta}(s,a')}}{\partial \theta_i} =
+\sum_{a'} f_i(s,a') e^{Q_{\theta}(s,a')}
+\]
+
+Now we are ready to finish:
+
+\[
+\frac{\partial log(\pi_{\theta}(s,a))}{\partial \theta_i} = 
+\frac{g'}{g} - \frac{h'}{h} =
+\]
+
+\vspace{6pt}
+
+\[
+\frac{f_i(s,a) e^{Q_{\theta}(s,a)}}{e^{Q_{\theta}(s,a)}} - 
+\frac{\sum_{a'} f_i(s,a') e^{Q_{\theta}(s,a')}}{\sum_{a'} e^{Q_{\theta}(s,a')}}
+=
+\]
+
+\vspace{6pt}
+
+\[
+\frac{f_i(s,a) e^{Q_{\theta}(s,a)}}{e^{Q_{\theta}(s,a)}} - 
+\sum_{a'} \frac{e^{Q_{\theta}(s,a')}}{\sum_{a'} e^{Q_{\theta}(s,a')}} f_i(s,a') 
+= 
+\]
+
+\vspace{6pt}
+
+\[
+f_i(s,a) - \sum_{a'}\pi_{\theta}(s,a')f_i(s,a')
+\]
 
 \newpage
+
 
 \section{}
 
@@ -108,16 +174,49 @@ $Q_\pi(s,a,h)$ is maximized by:
 
 \newpage
 
+
 \section{}
 \begin{enumerate}[(a)]
 \item
+\emph{No}, it is definitely not complete. If a proposition in state
+$s_i$ that is not deleted by $a_i$ does not persist to $s_{i+1}$, then the
+algorithm ends up with a restricted view of the environment, and may lose
+information that it needs to find a route to the goal. Consider the following
+planning graph:
 
+\begin{center}
+
+\includegraphics{planning.png}
+
+\end{center}
+
+In s0 prop1 and prop2 are asserted, in a0 action1 can be taken to add 
+prop3 and delete its precondition prop1, then in s1 action2
+(with preconditions prop3 and prop2) can be taken to reach propGoal, which we
+will assume is the only proposition of the goal state.
+
+\vspace{1em}
+
+In this scenario, it is only possible to reach the goal if prop2 persists from
+s0 to s1. If that persistence action was not there, then GraphPlan would
+fail to find a path to the goal state, and is therefore incomplete.
 
 \item
+\emph{No}, it is definitely not sound. The purpose of computing mutex
+relations is not only to prune the search tree, making GraphPlan
+more efficient, but also to ensure that it produces valid layered plans. For
+example, suppose at some level we have the necessary preconditions to take
+either of two actions, but one action deletes
+a precondition of the other action. Using mutexes will rule out these two
+actions as not valid in the same layer, but without using mutexes GraphPlan
+could place them in the same layer. Since one deletes a precondition of the
+other, the order that the actions were taken in would be significant, and a plan
+putting them in the same layer would be unsound.
 
 \end{enumerate}
 
 \newpage
+
 
 \section{}
 
