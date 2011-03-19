@@ -481,28 +481,42 @@ class PlanningAgentStrategic(Agent):
 				max_potential = temp
 				selected_category = category
 		return selected_category
-MAX_RUNS = 20
+
+
+max_runs = int(raw_input('How many times do you want to run the simulation? '))
+
+print 'Choose an agent'
+print '1 - Random'
+print '2 - Greedy'
+print '3 - Strategic'
+print '4 - Human'
+print '5 - Planned Greedy'
+print '6 - Planned Strategic'
+agent_type = int(raw_input(':'))
+
 simulation = Simulation()
-print "Random:"
-for i in range(0, MAX_RUNS):
-	simulation.run(RandomAgent(), show_output=False)
-print
-print
-print "Greedy:"
-for i in range(0, MAX_RUNS):
-	simulation.run(GreedyAgent(), show_output=False)
-print
-print
-print "Strategic:"
-for i in range(0, MAX_RUNS):
-	simulation.run(agent=StrategicAgent(), show_output=False)
-print
-print
-print "Planned Greedy:"
-for i in range(0, MAX_RUNS):
-	simulation.run(agent=PlanningAgentGreedy(), show_output=False)
-print
-print
-print "Planned Strategic:"
-for i in range(0, MAX_RUNS):
-	simulation.run(agent=PlanningAgentStrategic(), show_output=False)
+
+if agent_type == 1:
+    print "Random:"
+    for i in range(0, max_runs):
+        simulation.run(RandomAgent(), show_output=False)
+if agent_type == 2:
+    print "Greedy:"
+    for i in range(0, max_runs):
+        simulation.run(GreedyAgent(), show_output=False)
+if agent_type == 3:
+    print "Strategic:"
+    for i in range(0, max_runs):
+        simulation.run(agent=StrategicAgent(), show_output=False)
+if agent_type == 4:
+    print "Human:"
+    for i in range(0, max_runs):
+        simulation.run(agent=HumanAgent(), show_output=True)
+if agent_type == 5:
+    print "Planned Greedy:"
+    for i in range(0, max_runs):
+        simulation.run(agent=PlanningAgentGreedy(), show_output=False)
+if agent_type == 6:
+    print "Planned Strategic:"
+    for i in range(0, max_runs):
+        simulation.run(agent=PlanningAgentStrategic(), show_output=False)
