@@ -15,23 +15,25 @@
 \section{}
 Imagine a k-order MDP in which all states have at most one parent state. In
 other words, for all $s'$ that are states in the MDP, there exists at most one
-$s$ such that $T(s,a,s') > 0$. Such a a k-order MDP would be directly
-convertible to a first-order MDP, because each state would only have one
+$s$ such that $T(s,a,s') > 0$. Such a k-order MDP would be directly
+convertible to a first-order MDP, because each state would have one
 possible vector of ancestor states.
 
 \vspace{1em}
 
-However, in an average k-order MDP where states can have multiple parents,
+However, in a normal k-order MDP where states can have multiple parents,
 a state could have a number of different ancestor vectors, and that information
-is not really accounted for in a normal first-order MDP.
+is not accounted for in first-order MDP.
 
 \vspace{1em}
 
 So, to convert a k-order MDP $M$ to a first-order MDP $M'$, traverse M cloning
 states, actions, rewards, and transitions over to $M'$ exactly, except
-whenever a state $s$ is found with multiple parents, make a set of states in
-$M'$, ${s_1,s_2,...}$, one state for each of the parents to transition to. Also
-duplicate all of the descendants of $s$, so that $s_1,s_2,...$ each have their
+whenever a state $s$ is found with multiple parents. In that case make a set of 
+states in $S'$ to represent such an $s'$ in $S$, $\{s'_1,s'_2,...,s'_k\}$,
+one state for each of the $k$ parents to transition to. Also
+duplicate all of the descendants of $s'$, so that {$s_1,s_2,...,s_k$} each have 
+their
 own copy. Finally, when copies of descendants are made in this way, check to
 see if they can be merged back together farther down the tree when they have the
 same ancestor vectors again (see picture).
@@ -219,5 +221,53 @@ putting them in the same layer would be unsound.
 
 
 \section{}
+\begin{enumerate}[(a)]
+\item
+Since the total error is at worst the sum of the errors introduced by a finite
+horizon $h$ and a finite $w$, i.e. $\epsilon_h + \epsilon_w \le \epsilon$, we
+can set $h$ and $w$ to get their own half of $\epsilon$. So
+$\epsilon_h=\epsilon_w = \epsilon/2$.
+
+\vspace{1em}
+
+The error introduced by a finite $h$ was derived in Question 3:
+
+\[
+\frac{\beta^h}{1-\beta}R_{max} \le \epsilon_h \Longrightarrow
+\]
+\[
+h = log_{\beta}(\frac{(\epsilon /2)(1-\beta)}{R_{max}})
+\]
+
+It is given that the Chernoff bound bounds the error introduced by a finite $w$.
+So choose w based on that equation:
+
+\[
+w = (\frac{R_{max}}{e/2})^2 \times log(\frac{1}{\delta'})
+\]
+
+\item
+Now the chance that any individual QEstimate is wrong is $\delta '$, from which
+we can calculate the chance $\delta$ that any of $|A|$ of them are wrong, and
+then choose a $\delta '$. $\delta$ is the opposite of all of them being right,
+which are $|A|$ independent events, so:
+
+\[
+\delta = 1-(1-\delta')^{|A|} \Longrightarrow
+\]
+\[
+\delta' = 1 - \sqrt[|A|]{1-\delta}
+\]
+
+Now, if $Q_1(s) - Q_2(s) = \Delta(s)$, then if the estimate of $Q_1(s)$ is
+$>\Delta(s)/2$ too high, and the estimate of $Q_2(s)$ is $>\Delta(s)/2$
+too low, then $Q_2$ will incorrectly appear better than $Q_1(s)$, so finally
+we have:
+
+\[
+\epsilon = \frac{\Delta(s)}{2}
+\]
+
+\end{enumerate}
 
 \end{document}
